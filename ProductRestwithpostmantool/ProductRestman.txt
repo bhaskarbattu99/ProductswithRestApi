@@ -1,0 +1,362 @@
+ProductRESTAPI with POSTMANTOOL:- 
+
+src/main/java
+
+com.web
+
+ProductRestapiApplication.java
+
+
+package com.web;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ProductRestapiApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ProductRestapiApplication.class, args);
+	}
+
+}
+
+com.web.controller
+
+Product456Controller.java
+
+package com.web.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.web.model.Product456;
+import com.web.srevice.Product456Service;
+
+@RestController
+
+public class Product456Controller {
+	@Autowired
+	private Product456Service service;
+	
+	
+	@PostMapping("/save")
+	public Product456 save(@RequestBody Product456 pd) {
+		return service.saveProduct456(pd);
+	}
+	@DeleteMapping("/delete/{id}")
+	public void delete (@PathVariable Integer id)
+	{
+		service.deleteProduct456(id);
+	}
+	@GetMapping("/get/{id}")
+	public Product456 getOne(@PathVariable Integer id)
+	{
+		return service.getProduct456(id);
+	}
+	@GetMapping("/getAll")
+	public List<Product456>getAll(){
+		return service.getAllProduct456();
+		}
+	@PutMapping("/update/{id}")
+	public Product456 update(@RequestBody Product456 pd,@PathVariable Integer id )
+	{
+		return service.updateProduct456(pd, id);
+	}
+
+}
+
+com.web.model
+
+Product456.java
+package com.web.model;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class Product456 {
+	@Id
+	private  Integer id;
+	private String pname;
+	private double price;
+	private Integer quantity;
+	private String description;
+	public Product456() {
+		super();
+	}
+	public Product456(Integer id, String pname, double price, Integer quantity, String description) {
+		super();
+		this.id = id;
+		this.pname = pname;
+		this.price = price;
+		this.quantity = quantity;
+		this.description = description;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public Integer getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	@Override
+	public String toString() {
+		return "Product456 [id=" + id + ", pname=" + pname + ", price=" + price + ", quantity=" + quantity
+				+ ", description=" + description + "]";
+	}
+
+}
+com.web.repo
+package com.web.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.web.model.Product456;
+@Repository
+
+public interface Product456Repo extends JpaRepository<Product456, Integer> {
+
+}
+com.web.srevice
+Product456Service.java
+
+package com.web.srevice;
+
+import java.util.List;
+
+import com.web.model.Product456;
+
+public interface Product456Service {
+	public Product456 saveProduct456(Product456 p);
+	public Product456 updateProduct456(Product456 p,Integer id);
+	public void  deleteProduct456(Integer id);
+	public Product456  getProduct456(Integer id);
+	public List<Product456> getAllProduct456();
+	
+	
+
+}
+Product456ServiceImp.java
+package com.web.srevice;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.web.model.Product456;
+import com.web.repo.Product456Repo;
+@Service
+public class Product456ServiceImp implements Product456Service {
+	@Autowired
+	private Product456Repo repo;
+
+	@Override
+	public Product456 saveProduct456(Product456 p) {
+		// TODO Auto-generated method stub
+		
+		return repo.save(p);
+	}
+
+	
+
+	@Override
+	public void deleteProduct456(Integer id) {
+		// TODO Auto-generated method stub
+		repo.deleteById(id);
+
+	}
+
+	@Override
+	public Product456 getProduct456(Integer id) {
+		// TODO Auto-generated method stub
+		return repo.findById(id).get();
+
+	}
+
+	@Override
+	public List<Product456> getAllProduct456() {
+		// TODO Auto-generated method stub
+		
+		return repo.findAll();
+	}
+	@Override
+	public Product456 updateProduct456(Product456 p, Integer id) {
+		// TODO Auto-generated method stub
+		Optional<Product456> optional=repo.findById(id);
+		Product456 p1=optional.get();
+		p1.setPname(p.getPname());
+		p1.setPrice(p.getPrice());
+		p1.setQuantity(p.getQuantity());
+		p1.setDescription(p.getDescription());
+		
+		return repo.save(p1);
+	}
+
+}
+application.properties
+server.port:2055
+
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+spring.datasource.username=bhaskar
+spring.datasource.password=bhaskar
+
+
+
+spring.jpa.database-platform=org.hibernate.dialect.Oracle10gDialect
+spring.jpa.hibernate.use-new-id-generator-mappings=false
+spring.jpa.hibernate.ddl-auto=update
+
+
+pom.xml<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.6</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.web</groupId>
+	<artifactId>UserManagementSystem</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>UserManagementSystem</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>11</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jasper -->
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat-jasper</artifactId>
+    <version>9.0.69</version>
+</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jasper -->
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat-jasper</artifactId>
+    <version>9.0.69</version>
+</dependency>
+<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+    <groupId>javax.servlet.jsp.jstl</groupId>
+    <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+    <version>1.2.1</version>
+</dependency>
+<dependency>
+    <groupId>taglibs</groupId>
+    <artifactId>standard</artifactId>
+    <version>1.1.2</version>
+</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+
+
+
+
+psstman
+GET: http://localhost:2055/getAll
+PUT:http://localhost:2055/update/id
+POST:http://localhost:2055/save
+DELETE:http://localhost:2055/delete/id
+GET:http://localhost:2055/get/id
+
+
+
+
+
+
+
+
+
+
+
